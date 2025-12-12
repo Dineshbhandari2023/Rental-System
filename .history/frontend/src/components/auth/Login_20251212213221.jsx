@@ -18,11 +18,11 @@ const Login = () => {
       console.error("Error while requesting google code:", error);
     }
   };
-  // const GoogleLogin = useGoogleLogin({
-  //   onSuccess: () => {},
-  //   onError: () => {},
-  //   flow: "auth-code",
-  // });
+  const GoogleLogin = useGoogleLogin({
+    onSuccess: () => {},
+    onError: () => {},
+    flow: "auth-code",
+  });
 
   const { login, error: authError, setError } = useAuth();
   const navigate = useNavigate();

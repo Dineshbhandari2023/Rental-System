@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Message from "../common/Message";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -11,18 +12,11 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const responseGoogle = async (authResult) => {
-    try {
-      console.log(authResult);
-    } catch (error) {
-      console.error("Error while requesting google code:", error);
-    }
-  };
-  // const GoogleLogin = useGoogleLogin({
-  //   onSuccess: () => {},
-  //   onError: () => {},
-  //   flow: "auth-code",
-  // });
+  const GoogleLogin = useGoogleLogin({
+    onSuccess: () => {},
+    onError: () => {},
+    flow: "auth-code",
+  });
 
   const { login, error: authError, setError } = useAuth();
   const navigate = useNavigate();

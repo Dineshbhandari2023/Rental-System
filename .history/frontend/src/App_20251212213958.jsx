@@ -101,7 +101,6 @@ import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ForgotPassword from "./components/auth/ForgotPassword";
-import ResetPassword from "./components/auth/ResetPassword";
 import PageNotFound from "./NotFound";
 
 // User pages

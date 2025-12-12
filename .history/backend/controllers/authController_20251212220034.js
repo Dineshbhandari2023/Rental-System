@@ -244,51 +244,32 @@ exports.updatePassword = async (req, res) => {
 // @access  Public
 exports.forgotPassword = async (req, res) => {
   try {
-    const { email } = req.body;
+    const user = await User.findOne({ email: req.body.email });
 
-    const user = await User.findOne({ email });
-
-    if (!user) {
+    if (!user)
       return res.status(404).json({
         success: false,
         error: "No user found with that email",
       });
-    }
 
-    // Generate 6-digit OTP
+    // generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Set OTP and expiry (10 min)
-    user.resetPasswordToken = otp;
-    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+    user.otpCode = otp;
+    user.otpExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
 
     await user.save();
-
-    // Email content
-    const message = `
-      <h2>Your OTP Code</h2>
-      <p>Use the following OTP to reset your password:</p>
-      <h1 style="font-size: 32px; letter-spacing: 4px;">${otp}</h1>
-      <p>This code will expire in <strong>10 minutes</strong>.</p>
-      <p>If you did not request this, please ignore this email.</p>
-    `;
-
-    // Send email
-    await sendEmail({
-      to: user.email,
-      subject: "Password Reset OTP",
-      html: message,
-    });
 
     res.status(200).json({
       success: true,
       message: "OTP sent to email!",
+      otp: process.env.NODE_ENV === "development" ? otp : undefined,
     });
   } catch (error) {
     console.error("Forgot password error:", error);
     res.status(500).json({
       success: false,
-      error: "Error generating OTP. Please try again.",
+      error: "Error generating OTP",
     });
   }
 };
@@ -302,8 +283,8 @@ exports.resetPassword = async (req, res) => {
 
     const user = await User.findOne({
       email,
-      resetPasswordToken: otp,
-      resetPasswordExpire: { $gt: Date.now() },
+      otpCode: otp,
+      otpExpire: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -314,20 +295,20 @@ exports.resetPassword = async (req, res) => {
     }
 
     user.password = newPassword;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+    user.otpCode = null;
+    user.otpExpire = null;
 
     await user.save();
 
     res.status(200).json({
       success: true,
-      message: "Password reset successful!",
+      message: "Password reset successfully!",
     });
   } catch (error) {
     console.error("Reset password error:", error);
     res.status(500).json({
       success: false,
-      error: "Error resetting password.",
+      error: "Error resetting password",
     });
   }
 };

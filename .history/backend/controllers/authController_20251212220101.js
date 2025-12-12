@@ -302,8 +302,8 @@ exports.resetPassword = async (req, res) => {
 
     const user = await User.findOne({
       email,
-      resetPasswordToken: otp,
-      resetPasswordExpire: { $gt: Date.now() },
+      otpCode: otp,
+      otpExpire: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -314,20 +314,20 @@ exports.resetPassword = async (req, res) => {
     }
 
     user.password = newPassword;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+    user.otpCode = null;
+    user.otpExpire = null;
 
     await user.save();
 
     res.status(200).json({
       success: true,
-      message: "Password reset successful!",
+      message: "Password reset successfully!",
     });
   } catch (error) {
     console.error("Reset password error:", error);
     res.status(500).json({
       success: false,
-      error: "Error resetting password.",
+      error: "Error resetting password",
     });
   }
 };

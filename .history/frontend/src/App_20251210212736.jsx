@@ -100,8 +100,6 @@ import { AuthProvider } from "./context/AuthContext";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import ForgotPassword from "./components/auth/ForgotPassword";
-import ResetPassword from "./components/auth/ResetPassword";
 import PageNotFound from "./NotFound";
 
 // User pages
@@ -137,9 +135,6 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
 
             <Route path="/*" element={<PageNotFound />} />
 
