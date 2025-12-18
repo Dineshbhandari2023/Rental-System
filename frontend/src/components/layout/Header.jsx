@@ -21,6 +21,9 @@ const Header = () => {
     navigate("/login");
   };
 
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL?.replace("/api", "");
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const navItems = [
     { name: "Home", path: "/", icon: HomeIcon },
     { name: "Browse Items", path: "/items", icon: ShoppingBagIcon },
@@ -44,6 +47,9 @@ const Header = () => {
         { name: "Login", path: "/login", icon: ArrowRightOnRectangleIcon },
         { name: "Register", path: "/register", icon: UserCircleIcon },
       ];
+  const profileImageUrl = user?.profilePicture?.startsWith("http")
+    ? user.profilePicture
+    : `${API_BASE_URL}${user?.profilePicture}`;
 
   return (
     <header className="bg-amber-50 shadow-md border-b-4 border-amber-800">
@@ -78,7 +84,26 @@ const Header = () => {
               <button className="flex items-center space-x-2 text-amber-900 hover:text-amber-950 border-2 border-amber-800 px-4 py-2 bg-amber-100 hover:bg-amber-200 transition-colors">
                 {user ? (
                   <>
-                    <UserCircleIcon className="h-6 w-6" />
+                    {user.profilePicture ? (
+                      <img
+                        src={
+                          BACKEND_URL
+                            ? `${BACKEND_URL.replace(/\/$/, "")}${
+                                user.profilePicture
+                              }`
+                            : user.profilePicture
+                        }
+                        alt="Profile"
+                        className="h-8 w-8 rounded-full object-cover border-2 border-amber-800"
+                        onError={(e) => {
+                          e.currentTarget.src =
+                            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+                        }}
+                      />
+                    ) : (
+                      <UserCircleIcon className="h-6 w-6" />
+                    )}
+
                     <span className="font-serif font-semibold">
                       {user.firstName}
                     </span>

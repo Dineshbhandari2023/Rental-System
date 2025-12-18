@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
 const { protect } = require("../middleware/auth");
+const upload = require("../middleware/upload");
 const {
   validateRegister,
   validateLogin,
@@ -12,6 +13,7 @@ const {
 // Public routes
 router.post(
   "/register",
+  upload.single("profileImage"),
   validateRegister,
   handleValidationErrors,
   authController.register

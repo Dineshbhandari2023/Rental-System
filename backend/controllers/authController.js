@@ -3,15 +3,69 @@ const Admin = require("../models/admin");
 const { sendTokenResponse } = require("../utils/generateToken");
 const sendEmail = require("../utils/sendEmail");
 
-// @desc    Register user
-// @route   POST /api/auth/register
-// @access  Public
+// exports.register = async (req, res) => {
+//   try {
+//     const { email, password, firstName, lastName, phone, role, address } =
+//       req.body;
+
+//     // Check existing user
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       return res.status(400).json({
+//         success: false,
+//         error: "User already exists with this email",
+//       });
+//     }
+
+//     // Profile image (optional)
+//     let profilePicture;
+//     if (req.file) {
+//       profilePicture = `/uploads/profile-images/${req.file.filename}`;
+//     }
+
+//     const user = await User.create({
+//       email,
+//       password,
+//       firstName,
+//       lastName,
+//       phone,
+//       role: role || "borrower",
+//       address: address ? JSON.parse(address) : undefined,
+//       profilePicture: profilePicture || undefined,
+//     });
+
+//     // Admin auto-creation
+//     if (user.role === "admin") {
+//       await Admin.create({
+//         userId: user._id,
+//         permissions: [
+//           "manage_users",
+//           "verify_users",
+//           "manage_disputes",
+//           "manage_items",
+//           "view_reports",
+//           "manage_payments",
+//           "system_settings",
+//         ],
+//         isSuperAdmin: true,
+//       });
+//     }
+
+//     sendTokenResponse(user, 201, res);
+//   } catch (error) {
+//     console.error("Register error:", error);
+
+//     res.status(500).json({
+//       success: false,
+//       error: error.message || "Error creating user",
+//     });
+//   }
+// };
+
 exports.register = async (req, res) => {
   try {
-    const { email, password, firstName, lastName, phone, role, address } =
-      req.body;
+    const { email, password, firstName, lastName, phone, role } = req.body;
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -20,46 +74,36 @@ exports.register = async (req, res) => {
       });
     }
 
-    // Create user
-    const user = await User.create({
+    let parsedAddress;
+    if (req.body.address) {
+      parsedAddress = JSON.parse(req.body.address);
+    }
+
+    const userData = {
       email,
       password,
       firstName,
       lastName,
       phone,
       role: role || "borrower",
-      address: address || {
-        street: "",
-        city: "",
-        state: "",
-        zipCode: "",
-        country: "USA",
-      },
-    });
+      address: parsedAddress,
+    };
 
-    // If user is admin (for initial setup), create admin record
-    if (user.role === "admin") {
-      await Admin.create({
-        userId: user._id,
-        permissions: [
-          "manage_users",
-          "verify_users",
-          "manage_disputes",
-          "manage_items",
-          "view_reports",
-          "manage_payments",
-          "system_settings",
-        ],
-        isSuperAdmin: true,
-      });
+    if (req.file) {
+      userData.profilePicture = `/uploads/profile-images/${req.file.filename}`;
+    } else {
+      userData.profilePicture =
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
     }
+
+    const user = await User.create(userData);
 
     sendTokenResponse(user, 201, res);
   } catch (error) {
     console.error("Register error:", error);
     res.status(500).json({
       success: false,
-      error: "Error creating user. Please try again.",
+      error: error.message || "Error creating user",
     });
   }
 };

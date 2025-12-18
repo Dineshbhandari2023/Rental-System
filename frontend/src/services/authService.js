@@ -2,12 +2,26 @@ import api from "./api";
 
 const authService = {
   // Register user
-  register: async (userData) => {
-    const response = await api.post("/auth/register", userData);
+  // register: async (userData) => {
+  //   const response = await api.post("/auth/register", userData);
+  //   if (response.data.token) {
+  //     localStorage.setItem("token", response.data.token);
+  //     localStorage.setItem("user", JSON.stringify(response.data.user));
+  //   }
+  //   return response.data;
+  // },
+  register: async (formData) => {
+    const response = await api.post("/auth/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
     }
+
     return response.data;
   },
 

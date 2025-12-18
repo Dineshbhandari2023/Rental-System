@@ -113,9 +113,8 @@ itemSchema.index({ location: "2dsphere" });
 itemSchema.index({ ownerId: 1, category: 1, isAvailable: 1 });
 
 // Update updatedAt on save
-itemSchema.pre("save", function (next) {
+itemSchema.pre("save", function () {
   this.updatedAt = Date.now();
-  next();
 });
 
 module.exports = mongoose.model("Item", itemSchema);

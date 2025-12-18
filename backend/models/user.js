@@ -65,8 +65,8 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      default:
-        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+      // default:
+      //   "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     },
     createdAt: {
       type: Date,
@@ -127,10 +127,10 @@ userSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Update updatedAt on save (no next needed)
-userSchema.pre("save", function () {
-  this.updatedAt = Date.now();
-});
+// // Update updatedAt on save (no next needed)
+// userSchema.pre("save", function () {
+//   this.updatedAt = Date.now();
+// });
 userSchema.methods.getSignedJwtToken = function () {
   return jwt.sign({ id: this._id, role: this.role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE || "30d",

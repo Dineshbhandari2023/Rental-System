@@ -18,7 +18,7 @@ const Login = () => {
       console.error("Error while requesting google code:", error);
     }
   };
-  // const GoogleLogin = useGoogleLogin({
+  // const GoogleLogin = useGoogleLogin({fforgot-
   //   onSuccess: () => {},
   //   onError: () => {},
   //   flow: "auth-code",
@@ -84,16 +84,28 @@ const Login = () => {
 
     setIsLoading(true);
 
-    const result = await login(formData.email, formData.password);
+    try {
+      const result = await login(formData.email, formData.password);
 
-    setIsLoading(false);
+      if (result.success) {
+        const role = result.user.role;
 
-    if (result.success) {
-      if (result.user.role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/dashboard");
+        // Role-based redirection
+        if (role === "admin") {
+          navigate("/admin/dashboard"); // or "/admin"
+        } else if (role === "lender") {
+          navigate("/lender/dashboard");
+        } else if (role === "borrower") {
+          navigate("/borrower/dashboard"); // or "/dashboard" or "/home"
+        } else {
+          // Fallback for any unexpected role
+          navigate("/dashboard");
+        }
       }
+    } catch (err) {
+      setError(err.message || "Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 

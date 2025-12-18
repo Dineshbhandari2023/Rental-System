@@ -3,6 +3,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const createAdmin = require("./config/createAdmin");
+const path = require("path");
 
 require("dotenv").config();
 
@@ -23,10 +24,13 @@ require("./models/admin");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/users");
+const itemRoutes = require("./routes/itemRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 
 const app = express();
 
 // Middleware
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
     origin:
@@ -37,7 +41,14 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(express.json());
+// app.use(express.json());
+app.use((req, res, next) => {
+  if (req.headers["content-type"]?.includes("multipart/form-data")) {
+    return next();
+  }
+  express.json()(req, res, next);
+});
+
 app.use(express.urlencoded({ extended: true }));
 
 // Logging middleware
@@ -95,6 +106,8 @@ app.get("/api/test-db", async (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/items", itemRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 // 404 handler - FIXED: Using app.all() instead of app.use() with wildcard
 app.all("", (req, res) => {
