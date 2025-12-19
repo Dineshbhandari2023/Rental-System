@@ -108,7 +108,7 @@ export default function MyBookings() {
                     <div>
                       <Link
                         to={`/borrower/bookings/${booking._id}`}
-                        className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+                        className="p-2 border rounded-lg hover:bg-gray-50"
                       >
                         View Details
                       </Link>

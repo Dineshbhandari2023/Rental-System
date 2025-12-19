@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import itemService from "../../services/itemService";
 import bookingService from "../../services/bookingService";
 import { Package, Clock, MapPin } from "lucide-react";
 
@@ -12,25 +13,14 @@ export default function BorrowerDashboard() {
     pastBookings: 0,
   });
 
-  const API_BASE_URL = import.meta.env.VITE_API_URL?.replace("/api", "");
-
   useEffect(() => {
     loadBookings();
   }, []);
 
   const loadBookings = async () => {
     try {
-      setLoading(true);
-
-      const data = await bookingService.getMyBookings({
-        page: 1,
-        limit: 20,
-      });
-
-      const bookingsData = data.bookings || [];
-      setBookings(bookingsData);
-
-      // Calculate stats
+      const data = await bookingService.getMyBookings({ page: 1, limit: 20 });
+      setBookings(data.bookings);
       setStats({
         activeBookings: bookingsData.filter((b) =>
           ["pending", "confirmed", "ongoing"].includes(b.status)
@@ -40,22 +30,13 @@ export default function BorrowerDashboard() {
         ).length,
       });
     } catch (error) {
-      toast.error(error.message || "Failed to load bookings");
-    } finally {
-      setLoading(false);
+      toast.error(error.message);
     }
-  };
-
-  const getImageUrl = (path) => {
-    if (!path) return "";
-    if (path.startsWith("http")) return path;
-    return `${API_BASE_URL}${path}`;
   };
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8 md:py-12">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
             Borrower Dashboard
@@ -74,7 +55,6 @@ export default function BorrowerDashboard() {
               <p className="text-3xl font-bold">{stats.activeBookings}</p>
             </div>
           </div>
-
           <div className="bg-white p-6 rounded-xl shadow-sm border flex items-center gap-4">
             <div className="p-3 bg-green-100 rounded-lg">
               <Package className="h-6 w-6 text-green-600" />
@@ -100,7 +80,6 @@ export default function BorrowerDashboard() {
                 <p className="text-sm opacity-90">Find items near you</p>
               </div>
             </Link>
-
             <button
               onClick={loadBookings}
               className="bg-white border p-6 rounded-xl flex items-center gap-4 hover:bg-gray-50 transition"
@@ -119,7 +98,6 @@ export default function BorrowerDashboard() {
           <div className="p-6 border-b">
             <h2 className="text-xl font-semibold">My Bookings</h2>
           </div>
-
           <div className="p-6">
             {loading ? (
               <div className="space-y-4">
@@ -152,21 +130,23 @@ export default function BorrowerDashboard() {
                     <div className="flex flex-col md:flex-row justify-between gap-4">
                       <div className="flex gap-4">
                         <img
-                          src={getImageUrl(booking.itemId?.images?.[0])}
-                          alt={booking.itemId?.title}
+                          src={booking.itemId.images[0]}
+                          alt={booking.itemId.title}
                           className="h-16 w-16 object-cover rounded"
                         />
                         <div>
                           <h3 className="font-semibold">
-                            {booking.itemId?.title}
+                            {booking.itemId.title}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            {new Date(booking.startDate).toLocaleDateString()} →{" "}
-                            {new Date(booking.endDate).toLocaleDateString()}
+                            From:{" "}
+                            {new Date(booking.startDate).toLocaleDateString()}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            To: {new Date(booking.endDate).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
-
                       <div className="flex items-center gap-4">
                         <span
                           className={`px-3 py-1 rounded-full text-sm ${

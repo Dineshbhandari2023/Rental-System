@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import itemService from "../../services/itemService";
-import { MapPin } from "lucide-react";
-import BookingForm from "./BookingForm";
+import { Calendar, DollarSign, MapPin, Shield } from "lucide-react";
+import BookingForm from "./BookingForm"; // Separate component below
 
 export default function ItemDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
-
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState(0);
-  const [isZoomOpen, setIsZoomOpen] = useState(false);
-
   const API_BASE_URL = import.meta.env.VITE_API_URL?.replace("/api", "");
-
   useEffect(() => {
     loadItem();
   }, [id]);
@@ -32,48 +27,34 @@ export default function ItemDetail() {
     }
   };
 
-  const getImageUrl = (path) => {
-    if (!path) return "";
-    if (path.startsWith("http")) return path;
-    return `${API_BASE_URL}${path}`;
-  };
-
-  if (loading) {
+  if (loading)
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
-  }
 
-  if (!item) {
+  if (!item)
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-600">
         Item not found
       </div>
     );
-  }
-
+  const getImageUrl = (path) => {
+    if (!path) return "";
+    if (path.startsWith("http")) return path;
+    return `${API_BASE_URL}${path}`;
+  };
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8 md:py-12">
-      {/* Back Button */}
-      <button
-        onClick={() => navigate("/borrower/browse")}
-        className="mb-6 inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
-      >
-        ← Back to Browse
-      </button>
-
       <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Image Gallery */}
+        {/* Images */}
         <div className="space-y-4">
           <img
             src={getImageUrl(item.images[currentImage])}
             alt={item.title}
-            onClick={() => setIsZoomOpen(true)}
-            className="w-full aspect-video object-cover rounded-xl cursor-zoom-in"
+            className="w-full rounded-xl object-cover aspect-video"
           />
-
           <div className="grid grid-cols-4 gap-2">
             {item.images.map((img, i) => (
               <img
@@ -81,17 +62,17 @@ export default function ItemDetail() {
                 src={getImageUrl(img)}
                 alt={`Thumbnail ${i + 1}`}
                 onClick={() => setCurrentImage(i)}
-                className={`h-20 w-full object-cover rounded-lg cursor-pointer border transition ${
+                className={`h-20 w-full object-cover rounded-lg cursor-pointer border ${
                   currentImage === i
                     ? "ring-2 ring-blue-600"
-                    : "opacity-70 hover:opacity-100"
+                    : "opacity-80 hover:opacity-100"
                 }`}
               />
             ))}
           </div>
         </div>
 
-        {/* Item Details */}
+        {/* Details */}
         <div className="space-y-6">
           <h1 className="text-3xl font-bold">{item.title}</h1>
           <p className="text-gray-600">{item.description}</p>
@@ -115,7 +96,7 @@ export default function ItemDetail() {
             <p>{item.addressText}</p>
           </div>
 
-          {item.rules?.length > 0 && (
+          {item.rules.length > 0 && (
             <div>
               <h3 className="font-semibold mb-2">Rules</h3>
               <ul className="list-disc pl-4 space-y-1">
@@ -130,28 +111,6 @@ export default function ItemDetail() {
           <BookingForm item={item} />
         </div>
       </div>
-
-      {/* Zoom / Lightbox */}
-      {isZoomOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
-          onClick={() => setIsZoomOpen(false)}
-        >
-          <button
-            onClick={() => setIsZoomOpen(false)}
-            className="absolute top-6 right-6 text-white text-3xl font-bold"
-          >
-            ✕
-          </button>
-
-          <img
-            src={getImageUrl(item.images[currentImage])}
-            alt={item.title}
-            onClick={(e) => e.stopPropagation()}
-            className="max-h-[90vh] max-w-[90vw] object-contain"
-          />
-        </div>
-      )}
     </div>
   );
 }

@@ -108,20 +108,20 @@ export default function MyBookings() {
                     <div>
                       <Link
                         to={`/borrower/bookings/${booking._id}`}
-                        className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+                        className="p-2 border rounded-lg hover:bg-gray-50"
                       >
                         View Details
                       </Link>
-
-                      {["pending", "confirmed"].includes(booking.status) && (
-                        <button
-                          onClick={() => handleCancel(booking._id)}
-                          className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200"
-                        >
-                          Cancel
-                        </button>
-                      )}
                     </div>
+
+                    {["pending", "confirmed"].includes(booking.status) && (
+                      <button
+                        onClick={() => handleCancel(booking._id)}
+                        className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200"
+                      >
+                        Cancel
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

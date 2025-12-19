@@ -93,7 +93,7 @@ bookingSchema.index({ lenderId: 1, status: 1 });
 bookingSchema.index({ startDate: 1, endDate: 1 });
 
 // Pre-save hook to generate transaction ID
-bookingSchema.pre("save", function () {
+bookingSchema.pre("save", function (next) {
   if (!this.transactionId) {
     this.transactionId = `TRX${Date.now()}${Math.floor(Math.random() * 1000)}`;
   }
