@@ -22,7 +22,7 @@ const navigation = [
   },
   {
     name: "My Listings",
-    path: "/lender/item",
+    path: "/lender/items",
     icon: Package,
   },
   {
@@ -37,7 +37,7 @@ const navigation = [
   },
   {
     name: "My Bookings",
-    path: "/lender/booking",
+    path: "/lender/bookings",
     icon: CalendarCheck,
   },
 ];

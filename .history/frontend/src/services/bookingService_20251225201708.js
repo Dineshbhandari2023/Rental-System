@@ -92,22 +92,6 @@ const bookingService = {
       );
     }
   },
-  // Add to bookingService
-  getLenderBookings: async ({ status, page = 1, limit = 20 } = {}) => {
-    try {
-      const params = new URLSearchParams();
-      if (status) params.append("status", status);
-      if (page) params.append("page", page);
-      if (limit) params.append("limit", limit);
-
-      const response = await api.get(
-        `/bookings/lender/my-rentals?${params.toString()}`
-      );
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || { message: "Failed to load your rentals" };
-    }
-  },
 };
 
 export default bookingService;

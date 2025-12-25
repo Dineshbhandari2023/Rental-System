@@ -37,8 +37,6 @@ import EditItemPage from "./pages/lender/EditItemPage";
 import HomePage from "./pages/lender/HomePage"; // Optional lender home
 import BookingsRequestsPage from "./pages/lender/BookingsRequestsPage";
 import MyBookingsPage from "./pages/lender/MyBookingsPage";
-import MyListingsPage from "./pages/lender/MyListingPage";
-import LenderProfilePage from "./pages/lender/LenderProfilePage";
 
 // Borrower pages
 import BorrowerLayout from "./pages/borrower/BorrowerLayout";
@@ -147,13 +145,11 @@ function App() {
               <Route path="/lender/items/new" element={<NewItemPage />} />
               <Route path="/lender/items/:id" element={<ItemDetailsPage />} />
               <Route path="/lender/items/:id/edit" element={<EditItemPage />} />
-              <Route path="/lender/item" element={<MyListingsPage />} />
               <Route
                 path="/lender/bookings/requests"
                 element={<BookingsRequestsPage />}
               />
               <Route path="/lender/booking" element={<MyBookingsPage />} />
-              <Route path="/lender/profile" element={<LenderProfilePage />} />
             </Route>
 
             {/** ---------- BORROWER ROUTES (NEW - with shared layout) ---------- */}

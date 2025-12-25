@@ -170,7 +170,7 @@ import {
   User,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
-import authService from "../../services/authService";
+import authService from "@/lib/api/authService";
 
 const navigation = [
   {

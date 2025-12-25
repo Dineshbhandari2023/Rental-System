@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Upload, X, Plus } from "lucide-react";
 import { toast } from "sonner";
-import itemService from "../../services/itemService";
+import itemService from "@/services/itemService";
 
 const CATEGORIES = [
   "Electronics",

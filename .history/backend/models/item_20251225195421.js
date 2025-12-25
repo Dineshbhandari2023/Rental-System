@@ -36,7 +36,7 @@ const itemSchema = new mongoose.Schema(
         "Vehicles",
         "Clothing",
         "Furniture",
-        "Real Estate",
+        "Real State",
         "Sports Equipments",
         "Party Supplies",
         "Camera and Photography",

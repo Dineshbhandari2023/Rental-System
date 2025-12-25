@@ -2,33 +2,29 @@
 // import { Link, useLocation, Outlet } from "react-router-dom";
 // import {
 //   LayoutDashboard,
-//   Search,
-//   BookOpen,
+//   Package,
+//   Plus,
 //   Menu,
 //   X,
 //   LogOut,
 //   User,
 // } from "lucide-react";
-// import { Toaster } from "sonner";
+// import { Toaster } from "sonner"; // We'll use sonner for toasts (consistent with other pages)
+
 // const navigation = [
 //   {
 //     name: "Dashboard",
-//     path: "/borrower/dashboard",
+//     path: "/lender/dashboard",
 //     icon: LayoutDashboard,
 //   },
 //   {
-//     name: "Browse Rentals",
-//     path: "/borrower/browse",
-//     icon: Search,
-//   },
-//   {
-//     name: "My Bookings",
-//     path: "/borrower/bookings",
-//     icon: BookOpen,
+//     name: "Add New Item",
+//     path: "/lender/items/new",
+//     icon: Plus,
 //   },
 // ];
 
-// export default function BorrowerLayout() {
+// export default function LenderLayout() {
 //   const location = useLocation();
 //   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -45,13 +41,11 @@
 //         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 //           <div className="flex h-16 items-center justify-between">
 //             {/* Logo */}
-//             <Link to="/borrower/dashboard" className="flex items-center gap-3">
+//             <Link to="/lender/dashboard" className="flex items-center gap-3">
 //               <div className="h-10 w-10 rounded-lg bg-blue-600 flex items-center justify-center">
-//                 <Search className="h-6 w-6 text-white" />
+//                 <Package className="h-6 w-6 text-white" />
 //               </div>
-//               <span className="font-bold text-xl text-gray-900">
-//                 RentHub Borrower
-//               </span>
+//               <span className="font-bold text-xl text-gray-900">RentHub</span>
 //             </Link>
 
 //             {/* Desktop Navigation */}
@@ -144,7 +138,8 @@
 
 //       {/* Main Content Area */}
 //       <main className="flex-1">
-//         <Outlet /> {/* Renders child routes like dashboard, browse, etc. */}
+//         <Outlet />{" "}
+//         {/* This renders the child route (Dashboard, New Item, Details, Edit, etc.) */}
 //       </main>
 
 //       {/* Toast Notifications */}
@@ -153,7 +148,7 @@
 //   );
 // }
 
-// // Helper function for class names (like shadcn's cn)
+// // Helper function to combine class names (equivalent to shadcn's cn)
 // function cn(...inputs) {
 //   return inputs.filter(Boolean).join(" ");
 // }
@@ -162,35 +157,30 @@ import React, { useState } from "react";
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
-  Search,
-  BookOpen,
+  Package,
+  Plus,
   Menu,
   X,
   LogOut,
   User,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
-import authService from "../../services/authService";
+import authService from "@/lib/api/authService";
 
 const navigation = [
   {
     name: "Dashboard",
-    path: "/borrower/dashboard",
+    path: "/lender/dashboard",
     icon: LayoutDashboard,
   },
   {
-    name: "Browse Rentals",
-    path: "/borrower/browse",
-    icon: Search,
-  },
-  {
-    name: "My Bookings",
-    path: "/borrower/bookings",
-    icon: BookOpen,
+    name: "Add New Item",
+    path: "/lender/items/new",
+    icon: Plus,
   },
 ];
 
-export default function BorrowerLayout() {
+export default function LenderLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -207,19 +197,19 @@ export default function BorrowerLayout() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header */}
+      {/* Top Navigation Bar */}
       <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link to="/borrower/dashboard" className="flex items-center gap-3">
+            <Link to="/lender/dashboard" className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-lg bg-blue-600 flex items-center justify-center">
-                <Search className="h-6 w-6 text-white" />
+                <Package className="h-6 w-6 text-white" />
               </div>
               <span className="font-bold text-xl text-gray-900">RentHub</span>
             </Link>
 
-            {/* Desktop Nav */}
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-2">
               {navigation.map((item) => {
                 const active = isActive(item.path);
@@ -256,15 +246,15 @@ export default function BorrowerLayout() {
               </button>
             </div>
 
-            {/* Mobile Menu Toggle */}
+            {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded-lg hover:bg-gray-100"
             >
               {mobileMenuOpen ? (
-                <X className="h-6 w-6 text-gray-700" />
+                <X className="h-6 w-6" />
               ) : (
-                <Menu className="h-6 w-6 text-gray-700" />
+                <Menu className="h-6 w-6" />
               )}
             </button>
           </div>
@@ -304,7 +294,6 @@ export default function BorrowerLayout() {
                     Profile
                   </button>
                 </Link>
-
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-left text-red-600"
@@ -318,7 +307,7 @@ export default function BorrowerLayout() {
         )}
       </header>
 
-      {/* Main Content */}
+      {/* Page Content */}
       <main className="flex-1">
         <Outlet />
       </main>
@@ -329,7 +318,7 @@ export default function BorrowerLayout() {
   );
 }
 
-/* Utility function */
+/* Utility */
 function cn(...inputs) {
   return inputs.filter(Boolean).join(" ");
 }

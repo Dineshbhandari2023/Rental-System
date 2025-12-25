@@ -38,7 +38,6 @@ import HomePage from "./pages/lender/HomePage"; // Optional lender home
 import BookingsRequestsPage from "./pages/lender/BookingsRequestsPage";
 import MyBookingsPage from "./pages/lender/MyBookingsPage";
 import MyListingsPage from "./pages/lender/MyListingPage";
-import LenderProfilePage from "./pages/lender/LenderProfilePage";
 
 // Borrower pages
 import BorrowerLayout from "./pages/borrower/BorrowerLayout";
@@ -153,7 +152,6 @@ function App() {
                 element={<BookingsRequestsPage />}
               />
               <Route path="/lender/booking" element={<MyBookingsPage />} />
-              <Route path="/lender/profile" element={<LenderProfilePage />} />
             </Route>
 
             {/** ---------- BORROWER ROUTES (NEW - with shared layout) ---------- */}

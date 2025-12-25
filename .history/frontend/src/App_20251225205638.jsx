@@ -38,7 +38,6 @@ import HomePage from "./pages/lender/HomePage"; // Optional lender home
 import BookingsRequestsPage from "./pages/lender/BookingsRequestsPage";
 import MyBookingsPage from "./pages/lender/MyBookingsPage";
 import MyListingsPage from "./pages/lender/MyListingPage";
-import LenderProfilePage from "./pages/lender/LenderProfilePage";
 
 // Borrower pages
 import BorrowerLayout from "./pages/borrower/BorrowerLayout";

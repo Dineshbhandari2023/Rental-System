@@ -9,7 +9,6 @@ const {
   updateBookingStatus,
   cancelBooking,
   getLenderBookingRequests,
-  getLenderBookings,
 } = require("../controllers/bookingController");
 
 const router = express.Router();

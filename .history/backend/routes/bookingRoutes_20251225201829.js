@@ -9,7 +9,6 @@ const {
   updateBookingStatus,
   cancelBooking,
   getLenderBookingRequests,
-  getLenderBookings,
 } = require("../controllers/bookingController");
 
 const router = express.Router();
@@ -45,13 +44,6 @@ router.get(
   protect,
   authorize("lender"),
   getLenderBookingRequests
-);
-
-router.get(
-  "/lender/my-rentals",
-  protect,
-  authorize("lender"),
-  getLenderBookings // ← New route
 );
 
 module.exports = router;

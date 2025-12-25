@@ -328,7 +328,6 @@ exports.getLenderBookingRequests = async (req, res) => {
     });
   }
 };
-
 // @desc    Get lender's active/past rentals (confirmed, ongoing, completed, cancelled)
 // @route   GET /api/bookings/lender/my-rentals
 // @access  Private/Lender

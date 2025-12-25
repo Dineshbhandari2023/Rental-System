@@ -20,11 +20,11 @@ const navigation = [
     path: "/lender/dashboard",
     icon: LayoutDashboard,
   },
-  {
-    name: "My Listings",
-    path: "/lender/item",
-    icon: Package,
-  },
+  //   {
+  //     name: "My Listings",
+  //     path: "/lender/items",
+  //     icon: Package,
+  //   },
   {
     name: "Add New Item",
     path: "/lender/items/new",
@@ -35,11 +35,11 @@ const navigation = [
     path: "/lender/bookings/requests",
     icon: Calendar,
   },
-  {
-    name: "My Bookings",
-    path: "/lender/booking",
-    icon: CalendarCheck,
-  },
+  //   {
+  //     name: "My Bookings",
+  //     path: "/lender/bookings",
+  //     icon: CalendarCheck,
+  //   },
 ];
 
 export default function LenderLayout() {
