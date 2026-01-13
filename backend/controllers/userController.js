@@ -29,35 +29,83 @@ exports.getProfile = async (req, res) => {
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
+// exports.updateProfile = async (req, res) => {
+//   try {
+//     const updates = {
+//       firstName: req.body.firstName,
+//       lastName: req.body.lastName,
+//       phone: req.body.phone,
+//       address: req.body.address,
+//       profilePicture: req.body.profilePicture,
+//     };
+
+//     // Remove undefined fields
+//     Object.keys(updates).forEach(
+//       (key) => updates[key] === undefined && delete updates[key]
+//     );
+
+//     const user = await User.findByIdAndUpdate(req.user.id, updates, {
+//       new: true,
+//       runValidators: true,
+//     }).select("-password");
+
+//     res.status(200).json({
+//       success: true,
+//       user,
+//     });
+//   } catch (error) {
+//     console.error("Update profile error:", error);
+//     res.status(500).json({
+//       success: false,
+//       error: "Error updating profile",
+//     });
+//   }
+// };
+// userController.js - updateProfile
 exports.updateProfile = async (req, res) => {
   try {
-    const updates = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      phone: req.body.phone,
-      address: req.body.address,
-      profilePicture: req.body.profilePicture,
-    };
+    let updates = {};
 
-    // Remove undefined fields
-    Object.keys(updates).forEach(
-      (key) => updates[key] === undefined && delete updates[key]
-    );
+    if (req.body.firstName) updates.firstName = req.body.firstName;
+    if (req.body.lastName) updates.lastName = req.body.lastName;
+    if (req.body.phone) updates.phone = req.body.phone;
 
-    const user = await User.findByIdAndUpdate(req.user.id, updates, {
-      new: true,
-      runValidators: true,
-    }).select("-password");
+    // ─── Handle address ────────────────────────────────
+    if (req.body.address) {
+      try {
+        updates.address = JSON.parse(req.body.address);
+      } catch (e) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid address format",
+        });
+      }
+    }
 
-    res.status(200).json({
-      success: true,
-      user,
-    });
-  } catch (error) {
-    console.error("Update profile error:", error);
+    // Handle file upload (must have multer middleware)
+    if (req.file) {
+      updates.profilePicture = `/uploads/profile-images/${req.file.filename}`;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, error: "No fields provided" });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    res.status(200).json({ success: true, user });
+  } catch (err) {
+    console.error("Update profile error:", err);
     res.status(500).json({
       success: false,
       error: "Error updating profile",
+      // dev only:   message: err.message
     });
   }
 };

@@ -47,6 +47,8 @@ import BrowseItems from "./pages/borrower/BrowseItems";
 import ItemDetail from "./pages/borrower/ItemDetail";
 import MyBookings from "./pages/borrower/MyBookings";
 import BookingDetail from "./pages/borrower/BookingDetail";
+import MessagesPage from "./pages/MessagesPage";
+import BorrowerProfilePage from "./pages/borrower/BorrowerProfilePage";
 
 // Common
 import ProtectedRoute from "./components/common/ProtectedRoute";
@@ -141,33 +143,30 @@ function App() {
             />
 
             {/** ---------- LENDER ROUTES (with shared layout) ---------- */}
-            <Route element={<LenderLayout />}>
-              <Route path="/lender/home" element={<HomePage />} />
-              <Route path="/lender/dashboard" element={<LenderDashboard />} />
-              <Route path="/lender/items/new" element={<NewItemPage />} />
-              <Route path="/lender/items/:id" element={<ItemDetailsPage />} />
-              <Route path="/lender/items/:id/edit" element={<EditItemPage />} />
-              <Route path="/lender/item" element={<MyListingsPage />} />
+            <Route path="/lender" element={<LenderLayout />}>
+              <Route path="home" element={<HomePage />} />
+              <Route path="dashboard" element={<LenderDashboard />} />
+              <Route path="items/new" element={<NewItemPage />} />
+              <Route path="items/:id" element={<ItemDetailsPage />} />
+              <Route path="items/:id/edit" element={<EditItemPage />} />
+              <Route path="item" element={<MyListingsPage />} />
               <Route
-                path="/lender/bookings/requests"
+                path="bookings/requests"
                 element={<BookingsRequestsPage />}
               />
-              <Route path="/lender/booking" element={<MyBookingsPage />} />
-              <Route path="/lender/profile" element={<LenderProfilePage />} />
+              <Route path="booking" element={<MyBookingsPage />} />
+              <Route path="profile" element={<LenderProfilePage />} />
+              <Route path="messages" element={<MessagesPage />} />
             </Route>
 
             {/** ---------- BORROWER ROUTES (NEW - with shared layout) ---------- */}
-            <Route element={<BorrowerLayout />}>
-              <Route
-                path="/borrower/dashboard"
-                element={<BorrowerDashboard />}
-              />
-              <Route path="/borrower/browse" element={<BrowseItems />} />
-              <Route path="/borrower/bookings" element={<MyBookings />} />
-              <Route
-                path="/borrower/bookings/:id"
-                element={<BookingDetail />}
-              />
+            <Route path="/borrower" element={<BorrowerLayout />}>
+              <Route path="dashboard" element={<BorrowerDashboard />} />
+              <Route path="browse" element={<BrowseItems />} />
+              <Route path="bookings" element={<MyBookings />} />
+              <Route path="bookings/:id" element={<BookingDetail />} />
+              <Route path="messages" element={<MessagesPage />} />
+              <Route path="profile" element={<BorrowerProfilePage />} />
             </Route>
 
             {/** ---------- PUBLIC ITEM DETAIL (for borrowers to view & book) ---------- */}
