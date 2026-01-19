@@ -203,31 +203,61 @@ export default function BookingDetail() {
     }
   };
 
-  const handleSubmitReview = async () => {
-    if (rating === 0) {
-      toast.error("Please give a star rating");
-      return;
-    }
-    if (!comment.trim()) {
-      toast.error("Please write a comment");
-      return;
-    }
+  // const handleSubmitReview = async () => {
+  //   if (rating === 0) {
+  //     toast.error("Please give a star rating");
+  //     return;
+  //   }
+  //   if (!comment.trim()) {
+  //     toast.error("Please write a comment");
+  //     return;
+  //   }
+
+  //   setSubmitting(true);
+  //   try {
+  //     await reviewService.createReview({
+  //       bookingId: booking._id,
+  //       type: "user_to_item",
+  //       rating,
+  //       comment: comment.trim(),
+  //     });
+
+  //     toast.success("Thank you! Your review has been submitted.");
+  //     setHasReviewed(true);
+  //     setRating(0);
+  //     setComment("");
+  //   } catch (err) {
+  //     toast.error(err.error || "Failed to submit review");
+  //   } finally {
+  //     setSubmitting(false);
+  //   }
+  // };
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (rating === 0) return toast.error("Please select a rating");
+    if (!comment.trim()) return toast.error("Please write a comment");
 
     setSubmitting(true);
     try {
-      await reviewService.createReview({
-        bookingId: booking._id,
-        type: "user_to_item",
+      const result = await reviewService.submitBothReviews({
+        bookingId: id, // from useParams()
         rating,
-        comment: comment.trim(),
+        comment,
+        reviewLender: true, // or false if you don't want lender review
+        reviewItem: true,
+        // itemId: booking.itemId?._id   // optional safety — backend should get it from booking anyway
       });
 
-      toast.success("Thank you! Your review has been submitted.");
-      setHasReviewed(true);
-      setRating(0);
-      setComment("");
+      if (result.allSucceeded) {
+        toast.success("Thank you! Your review(s) have been submitted.");
+        navigate("/borrower/bookings");
+      } else {
+        toast.warning("Review submitted, but some parts failed. Please check.");
+        console.log("Partial failure:", result.failed);
+      }
     } catch (err) {
-      toast.error(err.error || "Failed to submit review");
+      toast.error(err.message || "Failed to submit review");
     } finally {
       setSubmitting(false);
     }

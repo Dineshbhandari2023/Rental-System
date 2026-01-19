@@ -414,7 +414,7 @@ export default function ItemDetail() {
                 period.
               </p>
               <button
-                onClick={() => navigate("/borrower/bookings")}
+                onClick={() => navigate("/borrower/bookings")} // ← change to your actual bookings route
                 className="px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
               >
                 Go to My Bookings

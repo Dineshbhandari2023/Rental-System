@@ -155,7 +155,6 @@
 //     </div>
 //   );
 // }
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -242,7 +241,7 @@ export default function ItemDetail() {
       // For simplicity — submitting only item review
       // You can extend to also submit lender review using submitBothReviews
       await reviewService.createReview({
-        bookingId: null,
+        bookingId: null, // ← you'll need real bookingId in real flow
         type: "user_to_item",
         rating,
         comment,
@@ -385,7 +384,7 @@ export default function ItemDetail() {
                       key={i}
                       size={20}
                       className={`${
-                        i < Math.round(reviewsData.averageRating || 0)
+                        i < Math.round(reviewsData.averageRating)
                           ? "fill-yellow-400 text-yellow-400"
                           : "text-gray-300"
                       }`}
@@ -393,7 +392,7 @@ export default function ItemDetail() {
                   ))}
                 </div>
                 <span className="font-semibold">
-                  {reviewsData.averageRating?.toFixed(1) || "—"}
+                  {reviewsData.averageRating || "—"}
                 </span>
                 <span className="text-gray-500 text-base">
                   ({reviewsData.totalReviews || 0} reviews)
@@ -402,41 +401,58 @@ export default function ItemDetail() {
             )}
           </div>
 
-          {/* Instead of form — helpful message */}
-          {isLoggedIn && isBorrower ? (
-            <div className="mb-10 pb-8 border-b bg-blue-50 p-6 rounded-lg">
-              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <Star size={20} className="text-yellow-500" />
-                Want to leave a review?
+          {/* Review submission form – only for logged-in borrowers */}
+          {isLoggedIn && isBorrower && !hasReviewed && (
+            <div className="mb-10 pb-8 border-b">
+              <h3 className="text-lg font-semibold mb-4">
+                Write a review for this item
               </h3>
-              <p className="text-gray-700 mb-4">
-                You can review this item after you have completed a rental
-                period.
-              </p>
-              <button
-                onClick={() => navigate("/borrower/bookings")}
-                className="px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
-              >
-                Go to My Bookings
-              </button>
-            </div>
-          ) : isLoggedIn ? (
-            <div className="mb-10 pb-8 border-b text-center text-gray-600 py-6">
-              Only borrowers can leave reviews.
-            </div>
-          ) : (
-            <div className="mb-10 pb-8 border-b text-center text-gray-600 py-6">
-              <button
-                onClick={() => navigate("/login")}
-                className="text-blue-600 hover:underline font-medium"
-              >
-                Log in
-              </button>{" "}
-              to leave a review after renting this item.
+              <form onSubmit={handleSubmitReview} className="space-y-4">
+                {/* Star rating selector */}
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      className="focus:outline-none"
+                    >
+                      <Star
+                        size={32}
+                        className={`${
+                          star <= rating
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-gray-300 hover:text-yellow-300"
+                        } transition-colors`}
+                      />
+                    </button>
+                  ))}
+                </div>
+
+                <textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Share your experience with this item..."
+                  rows={4}
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  required
+                />
+
+                <button
+                  type="submit"
+                  disabled={submittingReview}
+                  className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {submittingReview && (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  )}
+                  Submit Review
+                </button>
+              </form>
             </div>
           )}
 
-          {/* Reviews list – remains the same */}
+          {/* Reviews list */}
           {loadingReviews ? (
             <div className="flex justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
@@ -444,10 +460,7 @@ export default function ItemDetail() {
           ) : reviewsData?.reviews?.length > 0 ? (
             <div className="space-y-6">
               {reviewsData.reviews.map((review) => (
-                <div
-                  key={review._id}
-                  className="border-b pb-6 last:border-b-0 last:pb-0"
-                >
+                <div key={review._id} className="border-b pb-6 last:border-b-0">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
@@ -464,7 +477,7 @@ export default function ItemDetail() {
                     </div>
                     <span className="font-medium">
                       {review.reviewerId?.firstName}{" "}
-                      {review.reviewerId?.lastName?.charAt(0) || ""}
+                      {review.reviewerId?.lastName?.[0] || ""}
                     </span>
                     <span className="text-gray-500 text-sm">
                       {new Date(review.createdAt).toLocaleDateString()}
@@ -476,8 +489,7 @@ export default function ItemDetail() {
             </div>
           ) : (
             <div className="text-center py-12 text-gray-500">
-              No reviews yet. Be the first to share your experience after
-              renting!
+              No reviews yet. Be the first to share your experience!
             </div>
           )}
         </div>

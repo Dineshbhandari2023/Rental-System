@@ -28,8 +28,7 @@ const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/users");
 const itemRoutes = require("./routes/itemRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
-const messageRoutes = require("./routes/messages");
-const reviewRoutes = require("./routes/reviewRoutes");
+const messageRoutes = require("./routes/messages"); // Added messages routes
 
 const app = express();
 
@@ -112,8 +111,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/bookings", bookingRoutes);
-app.use("/api/messages", messageRoutes);
-app.use("/api/reviews", reviewRoutes);
+app.use("/api/messages", messageRoutes); // Added messages routes
 
 // 404 handler - FIXED: Using app.all() instead of app.use() with wildcard
 app.all("", (req, res) => {
