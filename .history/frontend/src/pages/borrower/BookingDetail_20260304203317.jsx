@@ -148,9 +148,7 @@ export default function BookingDetail() {
 
           <div className="flex-1 space-y-5">
             <div>
-              <h2 className="text-2xl text-black font-bold">
-                {booking.itemId?.title}
-              </h2>
+              <h2 className="text-2xl font-bold">{booking.itemId?.title}</h2>
               <p className="text-gray-800 mt-1">
                 by {booking.lenderId?.firstName} {booking.lenderId?.lastName}
               </p>
@@ -158,7 +156,7 @@ export default function BookingDetail() {
 
             <div className="flex items-center gap-3 text-lg">
               <span
-                className="px-4 py-2 rounded-full font-medium text-black
+                className="px-4 py-2 rounded-full font-medium
                 ${booking.status === 'completed' ? 'bg-green-100 text-green-800' : 
                   booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                   'bg-blue-100 text-blue-800'}"
@@ -214,7 +212,7 @@ export default function BookingDetail() {
         {/* REVIEW SECTION - Only show for borrower when completed */}
         {isBorrower && isCompleted && (
           <div className="border-t pt-8 mt-8">
-            <h3 className="text-2xl text-black font-bold mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
               <Star size={28} className="text-yellow-500" />
               Rate Your Experience
             </h3>
@@ -264,7 +262,7 @@ export default function BookingDetail() {
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Share your thoughts about the item, condition, lender communication, etc..."
                   rows={5}
-                  className="w-full p-4 border text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                  className="w-full p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                   required
                 />
 

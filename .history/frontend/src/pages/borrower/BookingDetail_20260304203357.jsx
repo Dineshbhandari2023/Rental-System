@@ -214,7 +214,7 @@ export default function BookingDetail() {
         {/* REVIEW SECTION - Only show for borrower when completed */}
         {isBorrower && isCompleted && (
           <div className="border-t pt-8 mt-8">
-            <h3 className="text-2xl text-black font-bold mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
               <Star size={28} className="text-yellow-500" />
               Rate Your Experience
             </h3>
@@ -264,7 +264,7 @@ export default function BookingDetail() {
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Share your thoughts about the item, condition, lender communication, etc..."
                   rows={5}
-                  className="w-full p-4 border text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                  className="w-full p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                   required
                 />
 
